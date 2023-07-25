@@ -61,6 +61,7 @@ ARG TARGETARCH
 COPY --from=tools /go/bin/* /usr/local/bin/
 COPY --from=ext_build /usr/share/postgresql/15/ /usr/share/postgresql/15/
 COPY --from=ext_build /usr/lib/postgresql/15/ /usr/lib/postgresql/15/
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN set -x \
     && apt-get update -y \
@@ -86,9 +87,10 @@ RUN set -x \
     && pip3 install https://github.com/zalando/patroni/archive/v3.0.0.zip \
     \
     # Install WAL-G
-    && curl -LO https://github.com/wal-g/wal-g/releases/download/v2.0.1/wal-g-pg-ubuntu-20.04-$(arch | sed s/x86_64/amd64/) \
-    && install -oroot -groot -m755 wal-g-pg-ubuntu-20.04-$(arch | sed s/x86_64/amd64/) /usr/local/bin/wal-g \
-    && rm wal-g-pg-ubuntu-20.04-$(arch | sed s/x86_64/amd64/) \
+    && arch=$(arch | sed s/x86_64/amd64/) \
+    && curl -LO https://github.com/wal-g/wal-g/releases/download/v2.0.1/wal-g-pg-ubuntu-20.04-${arch} \
+    && install -oroot -groot -m755 wal-g-pg-ubuntu-20.04-${arch} /usr/local/bin/wal-g \
+    && rm wal-g-pg-ubuntu-20.04-${arch} \
     \
     # Install vaultenv
     && curl -LO https://github.com/channable/vaultenv/releases/download/v0.15.1/vaultenv-0.15.1-linux-musl \
