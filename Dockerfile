@@ -55,6 +55,7 @@ FROM postgres:15
 ARG PG_MAJOR
 ARG POSTGIS_MAJOR
 ARG TIMESCALEDB_MAJOR
+ARG TARGETARCH
 
 # Add extensions
 COPY --from=tools /go/bin/* /usr/local/bin/
@@ -85,9 +86,9 @@ RUN set -x \
     && pip3 install https://github.com/zalando/patroni/archive/v3.0.0.zip \
     \
     # Install WAL-G
-    && curl -LO https://github.com/wal-g/wal-g/releases/download/v2.0.1/wal-g-pg-ubuntu-20.04-amd64 \
-    && install -oroot -groot -m755 wal-g-pg-ubuntu-20.04-amd64 /usr/local/bin/wal-g \
-    && rm wal-g-pg-ubuntu-20.04-amd64 \
+    && curl -LO https://github.com/wal-g/wal-g/releases/download/v2.0.1/wal-g-pg-ubuntu-20.04-$(arch | sed s/x86_64/amd64/) \
+    && install -oroot -groot -m755 wal-g-pg-ubuntu-20.04-$(arch | sed s/x86_64/amd64/) /usr/local/bin/wal-g \
+    && rm wal-g-pg-ubuntu-20.04-$(arch | sed s/x86_64/amd64/) \
     \
     # Install vaultenv
     && curl -LO https://github.com/channable/vaultenv/releases/download/v0.15.1/vaultenv-0.15.1-linux-musl \
