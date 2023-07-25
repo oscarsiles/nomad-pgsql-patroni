@@ -1,4 +1,4 @@
-ARG GO_VERSION=1.19
+ARG GO_VERSION=1.20
 ARG PG_MAJOR=15
 ARG TIMESCALEDB_MAJOR=2
 ARG POSTGIS_MAJOR=3
@@ -26,7 +26,7 @@ RUN mkdir -p ${GOPATH}/src/github.com/timescale/ \
 ############################
 # Build Postgres extensions
 ############################
-FROM postgres:15.1 AS ext_build
+FROM postgres:15 AS ext_build
 ARG PG_MAJOR
 
 RUN set -x \
@@ -51,7 +51,7 @@ RUN set -x \
 ############################
 # Add Timescale, PostGIS and Patroni
 ############################
-FROM postgres:15.1
+FROM postgres:15
 ARG PG_MAJOR
 ARG POSTGIS_MAJOR
 ARG TIMESCALEDB_MAJOR
