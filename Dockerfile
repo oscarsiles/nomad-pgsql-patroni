@@ -36,7 +36,7 @@ RUN set -x \
     && cd /build \
     \
     # Build pgvector
-    && git clone --branch v0.4.0 https://github.com/ankane/pgvector.git \
+    && git clone --branch v0.4.4 https://github.com/ankane/pgvector.git \
     && cd pgvector \
     && make \
     && make install \
@@ -81,10 +81,10 @@ RUN set -x \
     # Install Patroni
     && apt-get install -y --no-install-recommends \
         python3 python3-pip python3-setuptools \
-    && pip3 install --upgrade pip \
+#    && pip3 install --upgrade pip \
     && pip3 install wheel zipp==1.0.0 \
     && pip3 install awscli python-consul psycopg2-binary \
-    && pip3 install https://github.com/zalando/patroni/archive/v3.0.0.zip \
+    && pip3 install https://github.com/zalando/patroni/archive/v3.0.4.zip \
     \
     # Install WAL-G
     && arch=$(arch | sed s/x86_64/amd64/) \
@@ -93,9 +93,9 @@ RUN set -x \
     && rm wal-g-pg-ubuntu-20.04-${arch} \
     \
     # Install vaultenv
-    && curl -LO https://github.com/channable/vaultenv/releases/download/v0.15.1/vaultenv-0.15.1-linux-musl \
-    && install -oroot -groot -m755 vaultenv-0.15.1-linux-musl /usr/bin/vaultenv \
-    && rm vaultenv-0.15.1-linux-musl \
+    && curl -LO https://github.com/channable/vaultenv/releases/download/v0.15.1/vaultenv-0.16.0-linux-musl \
+    && install -oroot -groot -m755 vaultenv-0.16.0-linux-musl /usr/bin/vaultenv \
+    && rm vaultenv-0.16.0-linux-musl \
     \
     # Cleanup
     && rm -rf /var/lib/apt/lists/*
