@@ -6,22 +6,22 @@ ARG POSTGIS_MAJOR=3
 ############################
 # Build tools binaries in separate image
 ############################
-FROM golang:${GO_VERSION} AS tools
-
-RUN mkdir -p ${GOPATH}/src/github.com/timescale/ \
-    && cd ${GOPATH}/src/github.com/timescale/ \
-    && git clone https://github.com/timescale/timescaledb-tune.git \
-    && git clone https://github.com/timescale/timescaledb-parallel-copy.git \
-    # Build timescaledb-tune
-    && cd timescaledb-tune/cmd/timescaledb-tune \
-    && git fetch && git checkout --quiet $(git describe --abbrev=0) \
-    && go get -d -v \
-    && go build -o /go/bin/timescaledb-tune \
-    # Build timescaledb-parallel-copy
-    && cd ${GOPATH}/src/github.com/timescale/timescaledb-parallel-copy/cmd/timescaledb-parallel-copy \
-    && git fetch && git checkout --quiet $(git describe --abbrev=0) \
-    && go get -d -v \
-    && go build -o /go/bin/timescaledb-parallel-copy
+#FROM golang:${GO_VERSION} AS tools
+#
+#RUN mkdir -p ${GOPATH}/src/github.com/timescale/ \
+#    && cd ${GOPATH}/src/github.com/timescale/ \
+#    && git clone https://github.com/timescale/timescaledb-tune.git \
+#    && git clone https://github.com/timescale/timescaledb-parallel-copy.git \
+#    # Build timescaledb-tune
+#    && cd timescaledb-tune/cmd/timescaledb-tune \
+#    && git fetch && git checkout --quiet $(git describe --abbrev=0) \
+#    && go get -d -v \
+#    && go build -o /go/bin/timescaledb-tune \
+#    # Build timescaledb-parallel-copy
+#    && cd ${GOPATH}/src/github.com/timescale/timescaledb-parallel-copy/cmd/timescaledb-parallel-copy \
+#    && git fetch && git checkout --quiet $(git describe --abbrev=0) \
+#    && go get -d -v \
+#    && go build -o /go/bin/timescaledb-parallel-copy
 
 ############################
 # Build Postgres extensions
@@ -58,7 +58,7 @@ ARG TIMESCALEDB_MAJOR
 ARG TARGETARCH
 
 # Add extensions
-COPY --from=tools /go/bin/* /usr/local/bin/
+#COPY --from=tools /go/bin/* /usr/local/bin/
 COPY --from=ext_build /usr/share/postgresql/15/ /usr/share/postgresql/15/
 COPY --from=ext_build /usr/lib/postgresql/15/ /usr/lib/postgresql/15/
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -66,14 +66,14 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN set -x \
     && apt-get update -y \
     && apt-get install -y gcc curl procps python3-dev libpython3-dev libyaml-dev apt-transport-https ca-certificates \
-    && echo "deb https://packagecloud.io/timescale/timescaledb/debian/ bullseye main" > /etc/apt/sources.list.d/timescaledb.list \
-    && curl -L https://packagecloud.io/timescale/timescaledb/gpgkey | apt-key add - \
+#    && echo "deb https://packagecloud.io/timescale/timescaledb/debian/ bullseye main" > /etc/apt/sources.list.d/timescaledb.list \
+#    && curl -L https://packagecloud.io/timescale/timescaledb/gpgkey | apt-key add - \
     && apt-get update -y \
     && apt-cache showpkg postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
     && apt-get install -y --no-install-recommends \
         postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
         postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR-scripts \
-        timescaledb-$TIMESCALEDB_MAJOR-postgresql-$PG_MAJOR \
+#        timescaledb-$TIMESCALEDB_MAJOR-postgresql-$PG_MAJOR \
         postgis \
         postgresql-$PG_MAJOR-pgrouting \
         postgresql-$PG_MAJOR-cron \
