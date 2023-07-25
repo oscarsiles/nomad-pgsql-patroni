@@ -81,10 +81,10 @@ RUN set -x \
     # Install Patroni
     && apt-get install -y --no-install-recommends \
         python3 python3-pip python3-setuptools \
-#    && pip3 install --upgrade pip \
-    && pip3 install wheel zipp==1.0.0 \
-    && pip3 install awscli python-consul psycopg2-binary \
-    && pip3 install https://github.com/zalando/patroni/archive/v3.0.4.zip \
+    && pip3 install --upgrade pip --break-system-packages \
+    && pip3 install wheel zipp==1.0.0 --break-system-packages \
+    && pip3 install awscli python-consul psycopg2-binary --break-system-packages \
+    && pip3 install https://github.com/zalando/patroni/archive/v3.0.4.zip --break-system-packages \
     \
     # Install WAL-G
     && arch=$(arch | sed s/x86_64/amd64/) \
