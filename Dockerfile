@@ -46,6 +46,13 @@ RUN set -x \
     && git clone https://github.com/gavinwahl/postgres-json-schema \
     && cd postgres-json-schema \
     && make \
+    && make install \
+    && cd .. \
+    \
+    # Build pg_squeeze
+    && git clone https://github.com/cybertec-postgresql/pg_squeeze.git \
+    && cd pg_squeeze \
+    && make \
     && make install
 
 ############################
@@ -66,21 +73,21 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN set -x \
     && apt-get update -y \
     && apt-get install -y gcc curl procps python3-dev libpython3-dev libyaml-dev apt-transport-https ca-certificates \
-#    && echo "deb https://packagecloud.io/timescale/timescaledb/debian/ bullseye main" > /etc/apt/sources.list.d/timescaledb.list \
-#    && curl -L https://packagecloud.io/timescale/timescaledb/gpgkey | apt-key add - \
+    #    && echo "deb https://packagecloud.io/timescale/timescaledb/debian/ bullseye main" > /etc/apt/sources.list.d/timescaledb.list \
+    #    && curl -L https://packagecloud.io/timescale/timescaledb/gpgkey | apt-key add - \
     && apt-get update -y \
     && apt-cache showpkg postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
     && apt-get install -y --no-install-recommends \
-        postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
-        postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR-scripts \
-#        timescaledb-$TIMESCALEDB_MAJOR-postgresql-$PG_MAJOR \
-        postgis \
-        postgresql-$PG_MAJOR-pgrouting \
-        postgresql-$PG_MAJOR-cron \
+    postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
+    postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR-scripts \
+    #        timescaledb-$TIMESCALEDB_MAJOR-postgresql-$PG_MAJOR \
+    postgis \
+    postgresql-$PG_MAJOR-pgrouting \
+    postgresql-$PG_MAJOR-cron \
     \
     # Install Patroni
     && apt-get install -y --no-install-recommends \
-        python3 python3-pip python3-setuptools \
+    python3 python3-pip python3-setuptools \
     && pip3 install --upgrade pip --break-system-packages \
     && pip3 install wheel zipp==1.0.0 --break-system-packages \
     && pip3 install awscli python-consul psycopg2-binary --break-system-packages \
