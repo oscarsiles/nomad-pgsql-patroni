@@ -1,7 +1,10 @@
 ARG GO_VERSION=1.20
 ARG PG_MAJOR=15
+ARG PATRONI_VERSION=v3.1.0
 ARG TIMESCALEDB_MAJOR=2
 ARG POSTGIS_MAJOR=3
+ARG PGVECTOR_VERSION=v0.4.4
+ARG VAULTENV_VERSION=0.16.0
 
 ############################
 # Build tools binaries in separate image
@@ -28,6 +31,7 @@ ARG POSTGIS_MAJOR=3
 ############################
 FROM postgres:15 AS ext_build
 ARG PG_MAJOR
+ARG PGVECTOR_VERSION
 
 RUN set -x \
     && apt-get update -y \
@@ -36,7 +40,7 @@ RUN set -x \
     && cd /build \
     \
     # Build pgvector
-    && git clone --branch v0.4.4 https://github.com/ankane/pgvector.git \
+    && git clone --branch $PGVECTOR_VERSION https://github.com/ankane/pgvector.git \
     && cd pgvector \
     && make \
     && make install \
@@ -60,8 +64,10 @@ RUN set -x \
 ############################
 FROM postgres:15
 ARG PG_MAJOR
+ARG PATRONI_VERSION
 ARG POSTGIS_MAJOR
 ARG TIMESCALEDB_MAJOR
+ARG VAULTENV_VERSION
 ARG TARGETARCH
 
 # Add extensions
@@ -90,8 +96,8 @@ RUN set -x \
     python3 python3-pip python3-setuptools \
     && pip3 install --upgrade pip --break-system-packages \
     && pip3 install wheel zipp==1.0.0 --break-system-packages \
-    && pip3 install awscli python-consul psycopg2-binary --break-system-packages \
-    && pip3 install https://github.com/zalando/patroni/archive/v3.0.4.zip --break-system-packages \
+    && pip3 install python-consul "psycopg[binary]" --break-system-packages \
+    && pip3 install https://github.com/zalando/patroni/archive/${PATRONI_VERSION}.zip --break-system-packages \
     \
     # Install WAL-G
     && arch=$(arch | sed s/x86_64/amd64/) \
@@ -100,9 +106,9 @@ RUN set -x \
     && rm wal-g-pg-ubuntu-20.04-${arch} \
     \
     # Install vaultenv
-    && curl -LO https://github.com/channable/vaultenv/releases/download/v0.15.1/vaultenv-0.16.0-linux-musl \
-    && install -oroot -groot -m755 vaultenv-0.16.0-linux-musl /usr/bin/vaultenv \
-    && rm vaultenv-0.16.0-linux-musl \
+    && curl -LO https://github.com/channable/vaultenv/releases/download/v${VAULTENV_VERSION}/vaultenv-${VAULTENV_VERSION}-linux-musl \
+    && install -oroot -groot -m755 vaultenv-${VAULTENV_VERSION}-linux-musl /usr/bin/vaultenv \
+    && rm vaultenv-${VAULTENV_VERSION}-linux-musl \
     \
     # Cleanup
     && rm -rf /var/lib/apt/lists/*
