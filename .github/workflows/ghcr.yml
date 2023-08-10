@@ -6,9 +6,9 @@ env:
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["main"]
     tags:
-      - '*'
+      - "*"
 
 jobs:
   build-and-push:
@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        
+
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v2
 
