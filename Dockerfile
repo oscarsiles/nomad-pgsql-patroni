@@ -7,6 +7,7 @@ ARG TIMESCALEDB_MAJOR=2
 ARG POSTGIS_MAJOR=3
 ARG PGVECTOR_VERSION=v0.4.4
 ARG VAULTENV_VERSION=0.16.0
+ARG PG_SQUEEZE_VERSION=1.5.2
 ARG PG_TIMETABLE_VERSION=5.5.0
 
 ############################
@@ -35,6 +36,7 @@ ARG PG_TIMETABLE_VERSION=5.5.0
 FROM postgres:15 AS ext_build
 ARG PG_MAJOR
 ARG PGVECTOR_VERSION
+ARG PG_SQUEEZE_VERSION
 
 RUN set -x \
     && apt-get update -y \
@@ -57,7 +59,7 @@ RUN set -x \
     && cd .. \
     \
     # Build pg_squeeze
-    && git clone https://github.com/cybertec-postgresql/pg_squeeze.git \
+    && git clone --branch $PG_SQUEEZE_VERSION https://github.com/cybertec-postgresql/pg_squeeze.git \
     && cd pg_squeeze \
     && make \
     && make install
