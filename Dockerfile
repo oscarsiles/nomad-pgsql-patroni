@@ -1,3 +1,5 @@
+### With help from fork by sycured: https://github.com/sycured/nomad-pgsql-patroni
+
 ARG GO_VERSION=1.20
 ARG PG_MAJOR=15
 ARG PATRONI_VERSION=v3.1.0
@@ -5,6 +7,7 @@ ARG TIMESCALEDB_MAJOR=2
 ARG POSTGIS_MAJOR=3
 ARG PGVECTOR_VERSION=v0.4.4
 ARG VAULTENV_VERSION=0.16.0
+ARG PG_TIMETABLE_VERSION=5.5.0
 
 ############################
 # Build tools binaries in separate image
@@ -68,6 +71,7 @@ ARG PATRONI_VERSION
 ARG POSTGIS_MAJOR
 ARG TIMESCALEDB_MAJOR
 ARG VAULTENV_VERSION
+ARG PG_TIMETABLE_VERSION
 ARG TARGETARCH
 
 # Add extensions
@@ -91,6 +95,8 @@ RUN set -x \
     postgresql-$PG_MAJOR-pgrouting \
     postgresql-$PG_MAJOR-cron \
     \
+    && cpuarch=$(uname -m) \
+    \
     # Install Patroni
     && apt-get install -y --no-install-recommends \
     python3 python3-pip python3-setuptools \
@@ -100,16 +106,21 @@ RUN set -x \
     && pip3 install https://github.com/zalando/patroni/archive/${PATRONI_VERSION}.zip --break-system-packages \
     \
     # Install WAL-G
-    && arch=$(arch | sed s/x86_64/amd64/) \
-    && curl -LO https://github.com/wal-g/wal-g/releases/download/v2.0.1/wal-g-pg-ubuntu-20.04-${arch} \
-    && install -oroot -groot -m755 wal-g-pg-ubuntu-20.04-${arch} /usr/local/bin/wal-g \
-    && rm wal-g-pg-ubuntu-20.04-${arch} \
+    && [[ $cpuarch == x86_64 ]] && walg_arch=amd64 || walg_arch=aarch64 \
+    && curl -LO https://github.com/wal-g/wal-g/releases/download/v2.0.1/wal-g-pg-ubuntu-20.04-${walg_arch} \
+    && install -oroot -groot -m755 wal-g-pg-ubuntu-20.04-${walg_arch} /usr/local/bin/wal-g \
+    && rm wal-g-pg-ubuntu-20.04-${walg_arch} \
     \
     # Install vaultenv
     && curl -LO https://github.com/channable/vaultenv/releases/download/v${VAULTENV_VERSION}/vaultenv-${VAULTENV_VERSION}-linux-musl \
     && install -oroot -groot -m755 vaultenv-${VAULTENV_VERSION}-linux-musl /usr/bin/vaultenv \
     && rm vaultenv-${VAULTENV_VERSION}-linux-musl \
     \
+    # Install pg_timetable
+    && [[ $cpuarch == x86_64 ]] && pgtimetable_arch=x86_64 || pgtimetable_arch=arm64 \
+    && curl -LO https://github.com/cybertec-postgresql/pg_timetable/releases/download/v${PG_TIMETABLE_VERSION}/pg_timetable_${PG_TIMETABLE_VERSION}_Linux_${pgtimetable_arch}.deb \
+    && dpkg -i pg_timetable_${PG_TIMETABLE_VERSION}_Linux_${pgtimetable_arch}.deb \
+    && rm pg_timetable_${PG_TIMETABLE_VERSION}_Linux_${pgtimetable_arch}.deb \
     # Cleanup
     && rm -rf /var/lib/apt/lists/*
 
