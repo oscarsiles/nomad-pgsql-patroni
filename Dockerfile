@@ -97,6 +97,7 @@ RUN set -x \
     postgresql-$PG_MAJOR-pgrouting \
     postgresql-$PG_MAJOR-cron \
     pgbackrest \
+    nano \
     \
     && cpuarch=$(uname -m) \
     \
