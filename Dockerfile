@@ -96,6 +96,7 @@ RUN set -x \
     postgis \
     postgresql-$PG_MAJOR-pgrouting \
     postgresql-$PG_MAJOR-cron \
+    pgbackrest \
     \
     && cpuarch=$(uname -m) \
     \
