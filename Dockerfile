@@ -51,13 +51,6 @@ RUN set -x \
     && make install \
     && cd .. \
     \
-    # Build postgres-json-schema
-    && git clone https://github.com/gavinwahl/postgres-json-schema \
-    && cd postgres-json-schema \
-    && make \
-    && make install \
-    && cd .. \
-    \
     # Build pg_squeeze
     && git clone --branch $PG_SQUEEZE_VERSION https://github.com/cybertec-postgresql/pg_squeeze.git \
     && cd pg_squeeze \
