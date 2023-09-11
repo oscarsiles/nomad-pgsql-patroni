@@ -1,6 +1,6 @@
 ### With help from fork by sycured: https://github.com/sycured/nomad-pgsql-patroni
 
-ARG GO_VERSION=1.20
+ARG GO_VERSION=1.21
 ARG PG_MAJOR=15
 ARG PATRONI_VERSION=v3.1.0
 ARG TIMESCALEDB_MAJOR=2
