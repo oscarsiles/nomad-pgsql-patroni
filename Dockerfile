@@ -33,7 +33,7 @@ ARG PG_TIMETABLE_VERSION=5.5.0
 ############################
 # Build Postgres extensions
 ############################
-FROM postgres:15 AS ext_build
+FROM postgres:${PG_MAJOR} AS ext_build
 ARG PG_MAJOR
 ARG PGVECTOR_VERSION
 ARG PG_SQUEEZE_VERSION
@@ -60,7 +60,7 @@ RUN set -x \
 ############################
 # Add Timescale, PostGIS and Patroni
 ############################
-FROM postgres:15
+FROM postgres:${PG_MAJOR}
 ARG PG_MAJOR
 ARG PATRONI_VERSION
 ARG POSTGIS_MAJOR
@@ -71,8 +71,8 @@ ARG TARGETARCH
 
 # Add extensions
 #COPY --from=tools /go/bin/* /usr/local/bin/
-COPY --from=ext_build /usr/share/postgresql/15/ /usr/share/postgresql/15/
-COPY --from=ext_build /usr/lib/postgresql/15/ /usr/lib/postgresql/15/
+COPY --from=ext_build /usr/share/postgresql/${PG_MAJOR}/ /usr/share/postgresql/${PG_MAJOR}/
+COPY --from=ext_build /usr/lib/postgresql/${PG_MAJOR}/ /usr/lib/postgresql/${PG_MAJOR}/
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN set -x \
