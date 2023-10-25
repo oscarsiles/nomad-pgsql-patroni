@@ -115,7 +115,7 @@ RUN set -x \
     \
     # Install pg_timetable
     && [[ $cpuarch == x86_64 ]] && pgtimetable_arch=x86_64 || pgtimetable_arch=arm64 \
-    && curl -LO https://github.com/cybertec-postgresql/pg_timetable/releases/download/v${PG_TIMETABLE_VERSION}/pg_timetable_${PG_TIMETABLE_VERSION}_Linux_${pgtimetable_arch}.deb \
+    && curl -LO https://github.com/cybertec-postgresql/pg_timetable/releases/download/v${PG_TIMETABLE_VERSION}/pg_timetable_Linux_${pgtimetable_arch}.deb \
     && dpkg -i pg_timetable_${PG_TIMETABLE_VERSION}_Linux_${pgtimetable_arch}.deb \
     && rm pg_timetable_${PG_TIMETABLE_VERSION}_Linux_${pgtimetable_arch}.deb \
     # Cleanup
