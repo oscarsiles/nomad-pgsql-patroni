@@ -2,13 +2,13 @@
 
 ARG GO_VERSION=1.21
 ARG PG_MAJOR=16
-ARG PATRONI_VERSION=v3.1.2
+ARG PATRONI_VERSION=v3.2.0
 ARG TIMESCALEDB_MAJOR=2
 ARG POSTGIS_MAJOR=3
-ARG PGVECTOR_VERSION=v0.5.0
+ARG PGVECTOR_VERSION=v0.5.1
 ARG VAULTENV_VERSION=0.16.0
 ARG PG_SQUEEZE_VERSION=REL1_6_2
-ARG PG_TIMETABLE_VERSION=5.5.0
+ARG PG_TIMETABLE_VERSION=5.6.0
 
 ############################
 # Build tools binaries in separate image
@@ -123,10 +123,10 @@ RUN set -x \
 
 RUN mkdir -p /docker-entrypoint-initdb.d
 COPY ./files/000_shared_libs.sh /docker-entrypoint-initdb.d/000_shared_libs.sh
-COPY ./files/001_initdb_postgis.sh /docker-entrypoint-initdb.d/001_initdb_postgis.sh
+# COPY ./files/001_initdb_postgis.sh /docker-entrypoint-initdb.d/001_initdb_postgis.sh
 # COPY ./files/002_timescaledb_tune.sh /docker-entrypoint-initdb.d/002_timescaledb_tune.sh
 
-COPY ./files/update-postgis.sh /usr/local/bin
+# COPY ./files/update-postgis.sh /usr/local/bin
 COPY ./files/docker-initdb.sh /usr/local/bin
 
 USER postgres
