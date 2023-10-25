@@ -100,7 +100,7 @@ RUN set -x \
     && pip3 install --upgrade pip --break-system-packages \
     && pip3 install wheel zipp==1.0.0 --break-system-packages \
     && pip3 install python-consul "psycopg[binary]" --break-system-packages \
-    && pip3 install https://github.com/zalando/patroni/archive/${PATRONI_VERSION}.zip --break-system-packages \
+    && pip3 install https://github.com/zalando/patroni/archive/refs/tags/${PATRONI_VERSION}.zip --break-system-packages \
     \
     # Install WAL-G
     && [[ $cpuarch == x86_64 ]] && walg_arch=amd64 || walg_arch=aarch64 \
