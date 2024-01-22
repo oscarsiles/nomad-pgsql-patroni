@@ -102,12 +102,6 @@ RUN set -x \
     && pip3 install python-consul "psycopg[binary]" --break-system-packages \
     && pip3 install https://github.com/zalando/patroni/archive/refs/tags/${PATRONI_VERSION}.zip --break-system-packages \
     \
-    # Install WAL-G
-    && [[ $cpuarch == x86_64 ]] && walg_arch=amd64 || walg_arch=aarch64 \
-    && curl -LO https://github.com/wal-g/wal-g/releases/download/v2.0.1/wal-g-pg-ubuntu-20.04-${walg_arch} \
-    && install -oroot -groot -m755 wal-g-pg-ubuntu-20.04-${walg_arch} /usr/local/bin/wal-g \
-    && rm wal-g-pg-ubuntu-20.04-${walg_arch} \
-    \
     # Install vaultenv
     && curl -LO https://github.com/channable/vaultenv/releases/download/v${VAULTENV_VERSION}/vaultenv-${VAULTENV_VERSION}-linux-musl \
     && install -oroot -groot -m755 vaultenv-${VAULTENV_VERSION}-linux-musl /usr/bin/vaultenv \
