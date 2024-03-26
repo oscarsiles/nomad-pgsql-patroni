@@ -1,14 +1,14 @@
 ### With help from fork by sycured: https://github.com/sycured/nomad-pgsql-patroni
 
-ARG GO_VERSION=1.21
+ARG GO_VERSION=1.22
 ARG PG_MAJOR=16
 ARG PATRONI_VERSION=v3.2.2
 ARG TIMESCALEDB_MAJOR=2
 ARG POSTGIS_MAJOR=3
-ARG PGVECTOR_VERSION=v0.5.1
+ARG PGVECTOR_VERSION=v0.6.2
 ARG VAULTENV_VERSION=0.16.0
 ARG PG_SQUEEZE_VERSION=REL1_6_2
-ARG PG_TIMETABLE_VERSION=5.7.0
+ARG PG_TIMETABLE_VERSION=5.9.0
 
 ############################
 # Build tools binaries in separate image
